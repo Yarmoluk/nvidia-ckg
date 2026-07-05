@@ -1,0 +1,135 @@
+# NVIDIA CKG Plugin
+
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![Agent Skills Spec](https://img.shields.io/badge/Agent%20Skills-Specification-blue?style=flat)](https://agentskills.io)
+[![ckg-mcp](https://img.shields.io/badge/ckg--mcp-v0.7.6-76B900?style=flat)](https://pypi.org/project/ckg-mcp/)
+[![Benchmark](https://img.shields.io/badge/F1-0.471_vs_RAG_0.123-76B900?style=flat)](https://github.com/Yarmoluk/ckg-benchmark/blob/main/paper/main.pdf)
+[![Dataset](https://img.shields.io/badge/HuggingFace-danyarm%2Fckg--benchmark-orange?style=flat)](https://huggingface.co/datasets/danyarm/ckg-benchmark)
+
+Structured knowledge retrieval for NVIDIA's AI developer stack. `nvidia-ckg-skill` gives agents a typed, traversable graph of NVIDIA's documentation — list domains, search concepts, query dependency subgraphs, and multi-hop traverse. Every result is a declared relationship, not a probabilistic inference.
+
+---
+
+## Benchmark
+
+Evaluated on [ckg-benchmark v0.6.2](https://github.com/Yarmoluk/ckg-benchmark/blob/main/paper/main.pdf) — 7,758 queries across 51 domains.
+
+| Rank | System | F1 | Tokens/Query | Cost/1M Queries | 5-Hop F1 | Queries |
+|:---:|---|---:|---:|---:|---:|---:|
+| **1** | **CKG (ckg-mcp v0.7.6)** | **0.471** | **269** | **$7.81** | **0.771** | 7,758 |
+| 2 | RAG (text-embedding-3-small) | 0.123 | 2,982 | $76.23 | 0.170 | 7,191 |
+| 3 | GraphRAG (MS global mode) | 0.120 | 3,450 | $44.43 | — | 2,683 |
+
+**CKG F1 improves with hop depth — 0.37 → 0.77 from hop 0 to hop 5. RAG stays flat at ~0.13 regardless of depth.** Retrieval has no mechanism for traversing a chain. This is the architectural gap the benchmark was designed to surface.
+
+→ [Full leaderboard](https://huggingface.co/datasets/danyarm/ckg-benchmark) · [Paper](https://github.com/Yarmoluk/ckg-benchmark/blob/main/paper/main.pdf)
+
+### Reproduce
+
+```bash
+git clone https://github.com/Yarmoluk/ckg-benchmark
+cd ckg-benchmark
+pip install ckg-mcp
+python evaluate.py --system ckg --domains nvidia-developer-ecosystem nvidia-cuda-toolkit nvidia-tensorrt-triton
+```
+
+Dataset: [huggingface.co/datasets/danyarm/ckg-benchmark](https://huggingface.co/datasets/danyarm/ckg-benchmark)
+
+---
+
+## Install
+
+**Claude Code**
+```bash
+claude plugin marketplace add https://github.com/Yarmoluk/nvidia-ckg.git
+claude plugin install nvidia-ckg@nvidia-ckg --scope user
+```
+
+**Codex**
+```bash
+codex plugin marketplace add https://github.com/Yarmoluk/nvidia-ckg.git
+```
+
+**Local / other harnesses**
+```bash
+git clone https://github.com/Yarmoluk/nvidia-ckg.git
+cp -R nvidia-ckg/skills/nvidia-ckg-skill <your-skills-directory>/
+```
+
+---
+
+## Workflows
+
+| Workflow | Command |
+|---|---|
+| List all NVIDIA CKG domains | `python ./scripts/list_domains.py --filter nvidia` |
+| Load a domain (full or summary) | `python ./scripts/load_domain.py nvidia-cuda-toolkit` |
+| Search concepts by keyword | `python ./scripts/search_concepts.py nvidia-tensorrt-triton quantization` |
+| Query a concept's subgraph | `python ./scripts/query_ckg.py nvidia-tensorrt-triton tensorrt_sdk --depth 2` |
+| Full upstream dependency chain | `python ./scripts/query_ckg.py nvidia-cuda-toolkit tma_memory_access --depth 3` |
+
+---
+
+## NVIDIA Domains
+
+14 CKGs covering the full developer documentation stack. Each is a typed dependency graph — nodes are concepts, edges are named relations (ENABLES, REQUIRES, EXTENDS, OPTIMIZES, …).
+
+| Domain | Nodes | Edges | Coverage |
+|---|---:|---:|---|
+| `nvidia-developer-ecosystem` | 73 | 142 | Full ecosystem map — parent of all below |
+| `nvidia-cuda-toolkit` | 50 | 76 | Runtime, compiler, PTX, Hopper/Blackwell features |
+| `nvidia-tensorrt-triton` | 51 | 71 | TensorRT v11.1 optimizer + Triton serving |
+| `nvidia-cuda-x-libraries` | 50 | 70 | cuDNN, cuBLAS, cuFFT, NCCL, cuSPARSE |
+| `nvidia-jetson` | 49 | 73 | Edge AI, JetPack, embedded compute |
+| `nvidia-isaac-robotics` | 48 | 68 | GR00T, Isaac Lab, Sim, robot learning |
+| `nvidia-omniverse` | 50 | 72 | OpenUSD, digital twins, PhysX simulation |
+| `nvidia-metropolis` | 50 | 76 | Smart cities, DeepStream, IVA pipelines |
+| `nvidia-drive-av` | 45 | 68 | DRIVE OS, DriveWorks, DRIVE Sim |
+| `nvidia-clara` | 45 | 67 | Medical imaging, genomics, MONAI |
+| `nvidia-riva` | 48 | 72 | ASR, TTS, NLP, streaming speech AI |
+| `nvidia-hpc-sdk` | 50 | 72 | C/C++/Fortran compilers, OpenACC, NVSHMEM |
+| `nvidia-gameworks` | 49 | 72 | RTX, DLSS 4, ray tracing, PhysX, Reflex |
+| `nvidia-developer-tools` | 48 | 72 | Nsight Systems, Nsight Compute, sanitizers |
+
+---
+
+## Configuration
+
+| Variable | Default | Description |
+|---|---|---|
+| `CKG_PATH` | `~/Desktop/Knowledge_Graph_Graphify` | Directory containing CKG `.md` files |
+| `CKG_API_KEY` | — | Required for Pro-gated domains. Get at [graphifymd.com/caas](https://graphifymd.com/caas) |
+
+---
+
+## Custom Domains
+
+The 14 NVIDIA domains are free. **Need a CKG for your own codebase, internal documentation, or a domain not covered here?**
+
+→ [graphifymd.com/caas](https://graphifymd.com/caas) — CKG-as-a-Service, $99/mo. Submit a domain, get back a typed knowledge graph your agents can traverse.
+
+65+ domains available across science, engineering, policy, and AI research. [Full catalog](https://graphifymd.com).
+
+---
+
+## Requirements
+
+- Python 3.10+
+- Agent runtime with plugin or Agent Skills support (Claude Code, Codex, or compatible harness)
+- CKG `.md` files on disk, or `CKG_API_KEY` for Pro domains
+
+## Development
+
+```bash
+uv sync
+uv run pytest
+claude plugin validate .
+```
+
+## Evaluation
+
+See [BENCHMARK.md](BENCHMARK.md) for the full evaluation report including per-metric scores and eval task breakdown.
+
+## License
+
+MIT

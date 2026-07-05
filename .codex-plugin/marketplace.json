@@ -1,0 +1,23 @@
+{
+  "name": "nvidia-ckg",
+  "owner": {
+    "name": "nvidia-ckg maintainers"
+  },
+  "metadata": {
+    "description": "Codex marketplace for the NVIDIA CKG plugin.",
+    "version": "0.1.0"
+  },
+  "plugins": [
+    {
+      "name": "nvidia-ckg",
+      "source": {
+        "source": "url",
+        "url": "https://github.com/Yarmoluk/nvidia-ckg.git",
+        "ref": "main"
+      },
+      "description": "Codex plugin for CKG traversal — structured knowledge graphs for AI agents.",
+      "category": "knowledge-retrieval",
+      "tags": ["ckg", "knowledge-graph", "retrieval", "agent", "nvidia"]
+    }
+  ]
+}

@@ -1,0 +1,169 @@
+[
+  {
+    "id": "list-domains-nvidia",
+    "positive": true,
+    "prompt": "List all NVIDIA-related CKG domains available.",
+    "expected_skill": "nvidia-ckg-skill",
+    "expected_script": "list_domains.py",
+    "expected_args": ["--filter", "nvidia"],
+    "reference_answer": "Should return a table of nvidia-* domain slugs with node and edge counts.",
+    "area": "list-domains"
+  },
+  {
+    "id": "list-domains-all",
+    "positive": true,
+    "prompt": "What CKG domains are available? Show me everything.",
+    "expected_skill": "nvidia-ckg-skill",
+    "expected_script": "list_domains.py",
+    "expected_args": [],
+    "reference_answer": "Should return a full table of all CKG domains in the configured path.",
+    "area": "list-domains"
+  },
+  {
+    "id": "load-cuda-toolkit",
+    "positive": true,
+    "prompt": "Load the CUDA Toolkit CKG and show me its structure.",
+    "expected_skill": "nvidia-ckg-skill",
+    "expected_script": "load_domain.py",
+    "expected_args": ["nvidia-cuda-toolkit"],
+    "reference_answer": "Should display domain metadata, sub-domains, and node list for nvidia-cuda-toolkit.",
+    "area": "load-domain"
+  },
+  {
+    "id": "load-tensorrt-summary",
+    "positive": true,
+    "prompt": "Give me a summary of the TensorRT and Triton CKG.",
+    "expected_skill": "nvidia-ckg-skill",
+    "expected_script": "load_domain.py",
+    "expected_args": ["nvidia-tensorrt-triton", "--summary"],
+    "reference_answer": "Should display metadata and sub-domains without full node listing.",
+    "area": "load-domain"
+  },
+  {
+    "id": "search-concepts-quantization",
+    "positive": true,
+    "prompt": "What concepts related to quantization exist in the TensorRT CKG?",
+    "expected_skill": "nvidia-ckg-skill",
+    "expected_script": "search_concepts.py",
+    "expected_args": ["nvidia-tensorrt-triton", "quantization"],
+    "reference_answer": "Should return nodes related to FP8, INT8, QAT, PTQ quantization.",
+    "area": "search-concepts"
+  },
+  {
+    "id": "search-concepts-memory",
+    "positive": true,
+    "prompt": "Find all memory-related concepts in the CUDA Toolkit CKG.",
+    "expected_skill": "nvidia-ckg-skill",
+    "expected_script": "search_concepts.py",
+    "expected_args": ["nvidia-cuda-toolkit", "memory"],
+    "reference_answer": "Should return shared_memory, global_memory, unified_memory, etc.",
+    "area": "search-concepts"
+  },
+  {
+    "id": "query-tensorrt-sdk-depth1",
+    "positive": true,
+    "prompt": "What does tensorrt_sdk directly depend on?",
+    "expected_skill": "nvidia-ckg-skill",
+    "expected_script": "query_ckg.py",
+    "expected_args": ["nvidia-tensorrt-triton", "tensorrt_sdk", "--depth", "1"],
+    "reference_answer": "Should show immediate REQUIRES/ENABLES edges from tensorrt_sdk.",
+    "area": "query-concept"
+  },
+  {
+    "id": "query-cuda-toolkit-depth2",
+    "positive": true,
+    "prompt": "Show me the 2-hop dependency subgraph around cuda_toolkit in the CUDA domain.",
+    "expected_skill": "nvidia-ckg-skill",
+    "expected_script": "query_ckg.py",
+    "expected_args": ["nvidia-cuda-toolkit", "cuda_toolkit", "--depth", "2"],
+    "reference_answer": "Should return a 2-hop neighborhood showing compiler, runtime, and library dependencies.",
+    "area": "query-concept"
+  },
+  {
+    "id": "query-full-chain",
+    "positive": true,
+    "prompt": "Give me the full upstream dependency chain for triton_inference_server.",
+    "expected_skill": "nvidia-ckg-skill",
+    "expected_script": "query_ckg.py",
+    "expected_args": ["nvidia-tensorrt-triton", "triton_inference_server", "--depth", "3"],
+    "reference_answer": "Should trace full REQUIRES chain from triton back to cuda_toolkit.",
+    "area": "query-concept"
+  },
+  {
+    "id": "research-brief",
+    "positive": true,
+    "prompt": "What are the benchmark numbers for CKGs compared to RAG?",
+    "expected_skill": "nvidia-ckg-skill",
+    "expected_action": "read research-brief.md",
+    "reference_answer": "F1 CKG 0.471 vs RAG 0.123; 11x token compression; 5-hop F1 0.772 vs 0.170.",
+    "area": "research-brief"
+  },
+  {
+    "id": "search-concepts-cuda-kernel",
+    "positive": true,
+    "prompt": "Find concepts related to GPU kernels in the CUDA Toolkit.",
+    "expected_skill": "nvidia-ckg-skill",
+    "expected_script": "search_concepts.py",
+    "expected_args": ["nvidia-cuda-toolkit", "kernel"],
+    "reference_answer": "Should return warp, thread hierarchy, kernel launch, NVRTC-related nodes.",
+    "area": "search-concepts"
+  },
+  {
+    "id": "load-isaac-domain",
+    "positive": true,
+    "prompt": "What's in the Isaac Robotics CKG? Give me a summary.",
+    "expected_skill": "nvidia-ckg-skill",
+    "expected_script": "load_domain.py",
+    "expected_args": ["nvidia-isaac", "--summary"],
+    "reference_answer": "Should display isaac domain metadata and sub-domains.",
+    "area": "load-domain"
+  },
+  {
+    "id": "negative-web-search",
+    "positive": false,
+    "prompt": "Search the web for the latest NVIDIA GPU announcements.",
+    "expected_skill": null,
+    "reference_answer": "Should NOT activate nvidia-ckg-skill. This is a web search, not a CKG traversal.",
+    "area": "negative"
+  },
+  {
+    "id": "negative-code-generation",
+    "positive": false,
+    "prompt": "Write me a CUDA kernel for matrix multiplication.",
+    "expected_skill": null,
+    "reference_answer": "Should NOT activate nvidia-ckg-skill. This is code generation, not graph traversal.",
+    "area": "negative"
+  },
+  {
+    "id": "negative-general-rag",
+    "positive": false,
+    "prompt": "Search my documents for anything about TensorRT.",
+    "expected_skill": null,
+    "reference_answer": "Should NOT activate nvidia-ckg-skill. This is a general document search, not CKG traversal.",
+    "area": "negative"
+  },
+  {
+    "id": "negative-benchmarking",
+    "positive": false,
+    "prompt": "Run a benchmark on my model and report the throughput.",
+    "expected_skill": null,
+    "reference_answer": "Should NOT activate nvidia-ckg-skill. Benchmarking is out of scope.",
+    "area": "negative"
+  },
+  {
+    "id": "negative-training",
+    "positive": false,
+    "prompt": "Fine-tune a LLaMA model on my dataset using NeMo.",
+    "expected_skill": null,
+    "reference_answer": "Should NOT activate nvidia-ckg-skill. Model training is out of scope.",
+    "area": "negative"
+  },
+  {
+    "id": "negative-deployment",
+    "positive": false,
+    "prompt": "Deploy my model to a Kubernetes cluster with Triton.",
+    "expected_skill": null,
+    "reference_answer": "Should NOT activate nvidia-ckg-skill. Deployment execution is out of scope.",
+    "area": "negative"
+  }
+]

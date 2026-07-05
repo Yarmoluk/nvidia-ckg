@@ -1,0 +1,8 @@
+{
+  "name": "nvidia-ckg",
+  "description": "Codex plugin for CKG traversal — structured knowledge graphs for AI agents.",
+  "license": "MIT",
+  "skills": [
+    "./skills/nvidia-ckg-skill/"
+  ]
+}

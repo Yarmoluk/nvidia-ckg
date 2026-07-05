@@ -1,0 +1,8 @@
+{
+  "name": "nvidia-ckg",
+  "description": "Claude Code plugin for CKG (Compact Knowledge Graph) traversal — list domains, search concepts, query subgraphs, and multi-hop traverse.",
+  "license": "MIT",
+  "skills": [
+    "./skills/nvidia-ckg-skill/"
+  ]
+}
