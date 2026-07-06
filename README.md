@@ -72,24 +72,73 @@ cp -R nvidia-ckg/skills/nvidia-ckg-skill <your-skills-directory>/
 
 ## NVIDIA Domains
 
-14 CKGs covering the full developer documentation stack. Each is a typed dependency graph — nodes are concepts, edges are named relations (ENABLES, REQUIRES, EXTENDS, OPTIMIZES, …).
+19 CKGs covering NVIDIA's full stack — developer documentation, inference platform, training framework, enterprise layer, and physical AI. Each is a typed dependency graph — nodes are concepts, edges are named relations (ENABLES, REQUIRES, EXTENDS, OPTIMIZES, …).
+
+### Platform & Enterprise
 
 | Domain | Nodes | Edges | Coverage |
 |---|---:|---:|---|
 | `nvidia-developer-ecosystem` | 73 | 142 | Full ecosystem map — parent of all below |
+| `nvidia-nim` | 50 | 74 | NIM microservices: LLM, VLM, speech, biology, RAG, Kubernetes |
+| `nvidia-nemo` | 50 | 72 | NeMo: pretraining, SFT, LoRA, RLHF, DPO, GRPO, guardrails |
+| `nvidia-ai-enterprise` | 50 | 71 | NVAIE: licensing, ISV program, Kubernetes operators, cloud |
+| `nvidia-cosmos` | 46 | 66 | Cosmos WFM: world prediction, sim-to-real, synthetic data, robotics |
+
+### Developer Documentation
+
+| Domain | Nodes | Edges | Coverage |
+|---|---:|---:|---|
 | `nvidia-cuda-toolkit` | 50 | 76 | Runtime, compiler, PTX, Hopper/Blackwell features |
 | `nvidia-tensorrt-triton` | 51 | 71 | TensorRT v11.1 optimizer + Triton serving |
 | `nvidia-cuda-x-libraries` | 50 | 70 | cuDNN, cuBLAS, cuFFT, NCCL, cuSPARSE |
+| `nvidia-hpc-sdk` | 50 | 72 | C/C++/Fortran compilers, OpenACC, NVSHMEM |
+| `nvidia-developer-tools` | 48 | 72 | Nsight Systems, Nsight Compute, sanitizers |
+| `nvidia-omniverse` | 50 | 72 | OpenUSD, digital twins, PhysX simulation |
+| `nvidia-gameworks` | 49 | 72 | RTX, DLSS 4, ray tracing, PhysX, Reflex |
+| `nvidia-graphics-research` | 46 | 71 | nvdiffrast, instant-ngp, 3DGS, Kaolin, tiny-cuda-nn, NVLabs |
+
+### Edge, Robotics & Verticals
+
+| Domain | Nodes | Edges | Coverage |
+|---|---:|---:|---|
 | `nvidia-jetson` | 49 | 73 | Edge AI, JetPack, embedded compute |
 | `nvidia-isaac-robotics` | 48 | 68 | GR00T, Isaac Lab, Sim, robot learning |
-| `nvidia-omniverse` | 50 | 72 | OpenUSD, digital twins, PhysX simulation |
-| `nvidia-metropolis` | 50 | 76 | Smart cities, DeepStream, IVA pipelines |
 | `nvidia-drive-av` | 45 | 68 | DRIVE OS, DriveWorks, DRIVE Sim |
+| `nvidia-metropolis` | 50 | 76 | Smart cities, DeepStream, IVA pipelines |
 | `nvidia-clara` | 45 | 67 | Medical imaging, genomics, MONAI |
 | `nvidia-riva` | 48 | 72 | ASR, TTS, NLP, streaming speech AI |
-| `nvidia-hpc-sdk` | 50 | 72 | C/C++/Fortran compilers, OpenACC, NVSHMEM |
-| `nvidia-gameworks` | 49 | 72 | RTX, DLSS 4, ray tracing, PhysX, Reflex |
-| `nvidia-developer-tools` | 48 | 72 | Nsight Systems, Nsight Compute, sanitizers |
+
+---
+
+## Demo: CKG + NIM
+
+Traverse a CKG domain and answer a question using NIM as the inference engine. The subgraph becomes the context — structured, typed, and compact.
+
+```bash
+export NIM_API_KEY="nvapi-..."
+
+# Enterprise NIM deployment
+python demos/ckg_nim_demo.py \
+  --domain nvidia-nim \
+  --question "What does an enterprise need to deploy a NIM on-prem?" \
+  --depth 2
+
+# TensorRT quantization chain
+python demos/ckg_nim_demo.py \
+  --domain nvidia-tensorrt-triton \
+  --question "How does TensorRT quantization reduce inference latency?" \
+  --depth 3
+
+# Cosmos robot training pipeline
+python demos/ckg_nim_demo.py \
+  --domain nvidia-cosmos \
+  --question "How does Cosmos generate synthetic training data for robots?" \
+  --depth 2
+```
+
+**What you see:** CKG loads → entry concept found → subgraph extracted → token count (CKG vs RAG baseline) → NIM answer grounded in declared graph relationships.
+
+Default model: `meta/llama-3.1-70b-instruct`. Any model on [build.nvidia.com](https://build.nvidia.com) with a Free Endpoint badge works via `--model <model-id>`.
 
 ---
 
