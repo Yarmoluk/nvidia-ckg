@@ -108,10 +108,18 @@ def parse_nodes(text: str) -> dict[str, dict]:
 
 
 def parse_edges(text: str) -> list[tuple[str, str, str]]:
-    """Returns list of (source, relation, target)."""
+    """Returns list of (source, relation, target). Handles three formats:
+      --[REL]-->   new format with brackets
+      --REL-->     no brackets, double dash
+      -REL->       no brackets, single dash
+    """
     edges = []
     in_edges = False
-    pattern = re.compile(r'(\S+)\s+--\[(\w+)\]-->\s+(\S+)')
+    patterns = [
+        re.compile(r'(\S+)\s+--\[(\w+)\]-->\s+(\S+)'),   # --[REL]-->
+        re.compile(r'(\S+)\s+--(\w+)-->\s+(\S+)'),         # --REL-->
+        re.compile(r'(\S+)\s+-(\w+)->\s+(\S+)'),           # -REL->
+    ]
     for line in text.splitlines():
         if line.strip() == "## EDGES":
             in_edges = True
@@ -120,9 +128,11 @@ def parse_edges(text: str) -> list[tuple[str, str, str]]:
             break
         if not in_edges:
             continue
-        m = pattern.search(line)
-        if m:
-            edges.append((m.group(1), m.group(2), m.group(3)))
+        for pattern in patterns:
+            m = pattern.search(line)
+            if m:
+                edges.append((m.group(1), m.group(2), m.group(3)))
+                break
     return edges
 
 
