@@ -59,6 +59,24 @@ else
 fi
 ```
 
+## How to invoke
+
+Use this phrase pattern to trigger the skill rather than Claude answering from training data:
+
+```
+Use your nvidia-ckg-skill tools to [question about NVIDIA]
+```
+
+Examples:
+```
+Use your nvidia-ckg-skill tools to explain what TMA memory access requires on Hopper.
+Use your nvidia-ckg-skill tools to find what an enterprise needs to deploy NIM on-prem.
+Use your nvidia-ckg-skill tools to trace the full TensorRT inference optimization pipeline.
+Use your nvidia-ckg-skill tools to show how Cosmos generates synthetic robot training data.
+```
+
+The skill calls `search_concepts` first to resolve exact concept IDs, then `query_ckg` to traverse the subgraph. Every answer traces to a declared edge — not inference from training data.
+
 ## Workflows
 
 ### List Domains

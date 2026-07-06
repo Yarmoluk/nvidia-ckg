@@ -37,6 +37,41 @@ Dataset: [huggingface.co/datasets/danyarm/ckg-benchmark](https://huggingface.co/
 
 ---
 
+## Usage
+
+### Claude Desktop (MCP — recommended)
+
+Once the MCP server is installed and Claude Desktop is restarted, open a new chat and ask:
+
+```
+Use your ckg-nvidia-nim tools to find what an enterprise needs to deploy NIM on-prem.
+
+Use your ckg-nvidia-cuda-toolkit tools to explain what TMA memory access requires and enables.
+
+Use your ckg-nvidia-tensorrt-triton tools to trace the full inference optimization pipeline.
+```
+
+The phrase **"Use your ckg-[domain] tools to..."** tells Claude to call the graph rather than answer from training data. Claude will call `search_concepts` to find concept IDs, then `query_ckg` to traverse the subgraph. Every answer traces to a declared relationship — not inference.
+
+**Tool call flow:**
+1. `search_concepts(query)` — finds matching concept IDs by keyword
+2. `query_ckg(concept, depth)` — BFS traversal returning the typed subgraph
+3. Claude answers grounded in declared edges only
+
+### Claude Code / CLI (with NIM)
+
+```bash
+export NIM_API_KEY="nvapi-..."
+python demos/ckg_nim_demo.py \
+  --domain nvidia-nim \
+  --question "What does an enterprise need to deploy a NIM on-prem?" \
+  --depth 2
+```
+
+See `demos/ckg_nim_demo.py` — traverses the CKG, formats the subgraph as structured context, calls NIM, returns a grounded answer with token comparison vs RAG baseline.
+
+---
+
 ## Install
 
 **Claude Code**
