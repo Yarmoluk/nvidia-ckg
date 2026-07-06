@@ -95,6 +95,14 @@ def parse_nodes(text: str) -> dict[str, dict]:
                 save_current()
                 current = {"id": key, "display": val.strip(), "type": "", "desc": "", "deps": []}
 
+        # Bare format: "snake_case_id" at column 0, no colon (third CKG variant)
+        elif (line and not line.startswith(" ") and not line.startswith("\t")
+              and ":" not in line and not line.startswith("#")
+              and re.match(r'^[a-z][a-z0-9_]*$', line.strip())):
+            save_current()
+            actual_id = line.strip()
+            current = {"id": actual_id, "display": actual_id.replace("_", " ").title(), "type": "", "desc": "", "deps": []}
+
     save_current()
     return nodes
 
