@@ -22,6 +22,7 @@ CKG F1 improves monotonically with hop depth — 0.37 at hop 0 to 0.77 at hop 5.
 |---|---|---:|---:|---:|---:|
 | Claude Code | Claude Opus 4.8 | — | — | — | — |
 | Codex | GPT-5.4 | — | — | — | — |
+| Script eval (this runner) | — | 12/12 (100%) | N/A | N/A | N/A |
 
 *Skill-level agent evaluation pending first run. See [nvidia-kaggle BENCHMARK.md](https://github.com/NVIDIA/nvidia-kaggle/blob/main/BENCHMARK.md) for the reference evaluation format.*
 

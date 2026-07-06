@@ -34,7 +34,10 @@ def parse_meta(text: str) -> dict:
 def list_domains(path: Path, keyword: str = "") -> list[dict]:
     results = []
     for f in sorted(path.glob("ckg-*.md")):
-        text = f.read_text(errors="replace")
+        try:
+            text = f.read_text(errors="replace")
+        except OSError:
+            continue
         meta = parse_meta(text)
         domain = meta.get("domain", "")
         if not domain:

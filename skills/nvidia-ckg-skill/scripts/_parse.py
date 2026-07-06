@@ -12,7 +12,10 @@ def find_domain_file(path: Path, domain_slug: str) -> Path | None:
         if c.exists():
             return c
     for f in sorted(path.glob("ckg-*.md")):
-        text = f.read_text(errors="replace")
+        try:
+            text = f.read_text(errors="replace")
+        except OSError:
+            continue
         m = re.search(r'^domain:\s*(.+)$', text, re.MULTILINE)
         if m and m.group(1).strip() == domain_slug:
             return f

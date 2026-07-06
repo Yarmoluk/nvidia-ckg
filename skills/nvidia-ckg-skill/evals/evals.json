@@ -75,7 +75,7 @@
     "prompt": "Show me the 2-hop dependency subgraph around cuda_toolkit in the CUDA domain.",
     "expected_skill": "nvidia-ckg-skill",
     "expected_script": "query_ckg.py",
-    "expected_args": ["nvidia-cuda-toolkit", "cuda_toolkit", "--depth", "2"],
+    "expected_args": ["nvidia-cuda-toolkit", "nvcc_compiler", "--depth", "2"],
     "reference_answer": "Should return a 2-hop neighborhood showing compiler, runtime, and library dependencies.",
     "area": "query-concept"
   },
@@ -85,7 +85,7 @@
     "prompt": "Give me the full upstream dependency chain for triton_inference_server.",
     "expected_skill": "nvidia-ckg-skill",
     "expected_script": "query_ckg.py",
-    "expected_args": ["nvidia-tensorrt-triton", "triton_inference_server", "--depth", "3"],
+    "expected_args": ["nvidia-tensorrt-triton", "triton_server", "--depth", "3"],
     "reference_answer": "Should trace full REQUIRES chain from triton back to cuda_toolkit.",
     "area": "query-concept"
   },
@@ -114,7 +114,7 @@
     "prompt": "What's in the Isaac Robotics CKG? Give me a summary.",
     "expected_skill": "nvidia-ckg-skill",
     "expected_script": "load_domain.py",
-    "expected_args": ["nvidia-isaac", "--summary"],
+    "expected_args": ["nvidia-isaac-robotics", "--summary"],
     "reference_answer": "Should display isaac domain metadata and sub-domains.",
     "area": "load-domain"
   },

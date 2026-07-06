@@ -53,4 +53,5 @@ def test_query_ckg_unknown_concept():
     if not (CKG_PATH / "ckg-nvidia-cuda-toolkit-v0.1.md").exists():
         import pytest; pytest.skip("cuda-toolkit CKG not found locally")
     r = run_script("query_ckg.py", "nvidia-cuda-toolkit", "does_not_exist_xyz", "--path", str(CKG_PATH))
-    assert r.returncode != 0  # should exit with error
+    assert r.returncode != 0
+    assert "not found" in r.stdout.lower() or "not found" in r.stderr.lower()
